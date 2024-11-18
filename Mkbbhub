@@ -1,0 +1,68 @@
+local player = game.Players.LocalPlayer
+local ScreenGui = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local TextBox = Instance.new("TextBox")
+local SendButton = Instance.new("TextButton")
+local ToggleButton = Instance.new("TextButton")  -- زر لإخفاء/إظهار الإطار
+
+-- إعدادات الواجهة
+ScreenGui.Parent = player:WaitForChild("PlayerGui")
+ScreenGui.ResetOnSpawn = false  -- لا تختفي الواجهة عند موت اللاعب
+
+-- إعدادات الإطار
+Frame.Size = UDim2.new(0, 400, 0, 200)
+Frame.Position = UDim2.new(0.5, -200, 0.5, -100)
+Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+Frame.Draggable = true  -- يجعل الإطار قابلًا للسحب
+Frame.Visible = false  -- إخفاء الإطار في البداية
+Frame.Parent = ScreenGui
+
+-- إعدادات مربع النص
+TextBox.Size = UDim2.new(0, 380, 0, 40)
+TextBox.Position = UDim2.new(0, 10, 0, 10)
+TextBox.Text = "اكتب هنا"
+TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+TextBox.Parent = Frame
+
+-- إعدادات زر الإرسال
+SendButton.Size = UDim2.new(0, 380, 0, 50)
+SendButton.Position = UDim2.new(0, 10, 0, 150)
+SendButton.Text = "إرسال"
+SendButton.BackgroundColor3 = Color3.fromRGB(100, 100, 255)
+SendButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+SendButton.Parent = Frame
+
+-- إعدادات زر إخفاء/إظهار
+ToggleButton.Size = UDim2.new(0, 380, 0, 50)
+ToggleButton.Position = UDim2.new(0, 10, 0, 100)
+ToggleButton.Text = "إظهار الإطار"
+ToggleButton.BackgroundColor3 = Color3.fromRGB(255, 100, 100)
+ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ToggleButton.Parent = Frame
+
+-- وظيفة عند الضغط على زر الإرسال
+SendButton.MouseButton1Click:Connect(function()
+    local userInput = TextBox.Text
+    if userInput ~= "" then
+        -- إرسال الرسالة إلى الشات العام
+        game:GetService("Chat"):Chat(player.Character.Head, userInput, Enum.ChatColor.White)
+        TextBox.Text = ""  -- مسح النص بعد الإرسال
+    else
+        print("لم يتم إدخال نص.")
+    end
+end)
+
+-- وظيفة زر إخفاء/إظهار الإطار
+local isVisible = false  -- متغير لتتبع حالة الإطار (مرئي أو مخفي)
+
+ToggleButton.MouseButton1Click:Connect(function()
+    if isVisible then
+        Frame.Visible = false  -- إخفاء الإطار
+        ToggleButton.Text = "إظهار الإطار"  -- تغيير نص الزر
+    else
+        Frame.Visible = true  -- إظهار الإطار
+        ToggleButton.Text = "إخفاء الإطار"  -- تغيير نص الزر
+    end
+    isVisible = not isVisible  -- عكس حالة الإطار
+end)
